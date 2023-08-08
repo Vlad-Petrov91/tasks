@@ -1,0 +1,35 @@
+<?php
+
+// проверка заполнения полей данными
+if (!empty($_POST)) {
+    $data = [];
+    $errors = [];
+
+    // валидация phone формата +7**********
+    if (!preg_match('/\+7[0-9]{10}$/', $_POST['phone'])) {
+        $errors[] = "Введите номер формата +7*********";
+    }
+    // валидация поля fio формата Фамилия Имя Отчество
+    if (!preg_match('/^[А-ЯЁ][а-яё]*([-][А-ЯЁ][а-яё]*)?\s[А-ЯЁ][а-яё]*\s[А-ЯЁ][а-яё]*$/u', trim($_POST['fio']))) {
+        $errors[] = "Введите Фамилию Имя Отчество через пробел с заглавных букв";
+    }
+    // валидация goodID
+    if (!is_numeric($_POST['goodID'])) {
+        $errors[] = "Поле 'goodID' не корректно";
+    }
+
+    // если нет ошибок формируем массив данных
+    if (empty($errors)) {
+        $data['phone'] = $_POST['phone'];
+        $data['fio'] = trim($_POST['fio']);
+        $data['goodID'] = (int)$_POST['goodID'];
+        $data['uri'] = $_SERVER['HTTP_REFERER'];
+        // вывод массива с данными
+        var_dump($data);
+    } else {
+        // вывод ошибок
+        var_dump($errors);
+    }
+} else {
+    var_dump("Данные отсутствуют");
+}
